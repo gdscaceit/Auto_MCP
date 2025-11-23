@@ -1,0 +1,280 @@
+{
+  "info": {
+    "name": "FASTMCP – Sales Team Automation ERP",
+    "description": "API collection for testing FASTMCP MCP Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["health"]
+            },
+            "description": "Check server health and version"
+          }
+        },
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": [""]
+            },
+            "description": "Get API information and available endpoints"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "users"]
+            },
+            "description": "Get list of all users"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "users", "1"]
+            },
+            "description": "Get a specific user by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NLP Message Processing",
+      "item": [
+        {
+          "name": "Process Payment Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Google ka iss week ka 1.2 lakh payment aa gaya\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process a payment message using NLP"
+          }
+        },
+        {
+          "name": "Process Employee Assignment Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Ramesh is assigned to Google project\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process an employee assignment message"
+          }
+        },
+        {
+          "name": "Process Project Status Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Google project active karo\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process a project status update message"
+          }
+        },
+        {
+          "name": "Process Query Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Dharmendra ke sare active project dikhado\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process a query message"
+          }
+        },
+        {
+          "name": "Process Pending Payment Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Amazon ka last week ka payment pending hai\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process a pending payment message"
+          }
+        },
+        {
+          "name": "Process Employee Removal Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Deepak Google project se remove karo\",\n  \"user_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mcp/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mcp", "message"]
+            },
+            "description": "Process an employee removal message"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboards",
+      "item": [
+        {
+          "name": "Manager Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/manager/dashboard/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "manager", "dashboard", "1"]
+            },
+            "description": "Get manager dashboard with all projects and revenue data"
+          }
+        },
+        {
+          "name": "Executive Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/executive/dashboard/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "executive", "dashboard", "2"]
+            },
+            "description": "Get executive dashboard with personal projects"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "manager_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "executive_id",
+      "value": "2",
+      "type": "string"
+    }
+  ]
+}
