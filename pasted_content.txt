@@ -1,0 +1,391 @@
+Below is **a complete, clear, structured “Brainstorm + Requirement + Prompt Document”** you can directly send to your developer.
+Isme pura MCP server, NLP automation, tables, workflows, endpoints, tools — sab explain hai.
+Easy language + technical clarity combo.
+
+---
+
+# ✅ **MCP SERVER REQUIREMENT DOCUMENT (For Developer)**
+
+### **Project Name: FASTMCP – Sales Team Automation ERP**
+
+### **Company: Golden Eagle IT Technology**
+
+---
+
+# **1. Overview (What We Are Building)**
+
+We need to build an **MCP Server (Modular Control Protocol)** using:
+
+* **Python**
+* **FastAPI**
+* **PostgreSQL**
+* **SQLAlchemy ORM**
+
+This MCP backend will manage the entire workflow of our **sales team**, **projects**, **employees**, **payments**, and **NLP-based automation**.
+
+Goal:
+⭐ Sales team ko har project, payment, employee status automatically dikhe.
+⭐ NLP se koi bhi message / update aaye to system auto-update kar de.
+
+---
+
+# **2. Real Use Case**
+
+Example:
+
+* Sales team member “**Dharmendra**” 10 projects manage kar raha hai.
+* Her project me employees assigned hai.
+* Clients Google, Amazon, Adobe jaisi companies ho sakti hain.
+* Har project ka:
+
+  * weekly payment
+  * pending payment
+  * employee work duration
+  * active / inactive status
+  * invoice status
+  * next due date
+    automatically track hoga.
+
+Also:
+
+If a sales team member writes:
+
+> “Google ka iss week ka payment aa gaya ₹1,20,000”
+
+➡ NLP tool is message ko parse karega
+➡ PostgreSQL table me **Auto Entry** create hogi.
+
+---
+
+# **3. USERS**
+
+### **(A) Sales Manager**
+
+* All projects under his team
+* Each project ka full financial view
+* Pending payments
+* All assigned employees
+* Performance dashboard
+
+### **(B) Sales Executive**
+
+* Only unke khud ke projects
+* Weekly updates
+* Followups
+* Task automation
+
+### **(C) System NLP Agent**
+
+* Conversational commands → structured DB actions
+
+---
+
+# **4. Required Modules**
+
+1. **User Management**
+2. **Client Management**
+3. **Project Management**
+4. **Employee Assignment**
+5. **Payment Tracking**
+6. **NLP Engine Integration (MCP Tool #1)**
+7. **SQL Executor Tool (MCP Tool #2)**
+
+---
+
+# **5. Database Design (Final Schema)**
+
+### **🟦 Table: users (Sales Team)**
+
+| field         | type                     |
+| ------------- | ------------------------ |
+| id            | PK                       |
+| name          | text                     |
+| email         | text                     |
+| role          | enum(manager, executive) |
+| password_hash | text                     |
+| active        | boolean                  |
+
+---
+
+### **🟦 Table: clients**
+
+| field | type |
+| id | PK |
+| company_name | text |
+| address | text |
+| contact_person | text |
+| phone | text |
+
+---
+
+### **🟦 Table: projects**
+
+| field | type |
+| id | PK |
+| project_name | text |
+| client_id | FK |
+| sales_owner_id | FK → users |
+| start_date | date |
+| status | enum(active, completed, on-hold) |
+| estimated_value | numeric |
+
+---
+
+### **🟦 Table: employees**
+
+| field | type |
+| id | PK |
+| name | text |
+| email | text |
+| skillset | text |
+
+---
+
+### **🟦 Table: project_employee_map**
+
+| field | type |
+| project_id | FK |
+| employee_id | FK |
+| start_date | date |
+| end_date | date (nullable) |
+
+---
+
+### **🟦 Table: payments**
+
+| field | type |
+| id | PK |
+| project_id | FK |
+| week_number | int |
+| amount_received | numeric |
+| payment_date | date |
+| payment_status | enum(received, pending) |
+
+---
+
+# **6. MCP Server Architecture**
+
+```
+fastmcp/
+ ├── server.py                # MCP server bootstrap
+ ├── coordinator_agent.py     # Identify user intent (sales NLP)
+ ├── tools/
+ │     ├── nlp_parser.py      # MCP Tool 1 - natural language → JSON
+ │     ├── run_query.py       # MCP Tool 2 - execute SQL query
+ │     └── schemas/           # SQLAlchemy ORM schemas
+ ├── api/
+ │     ├── auth.py
+ │     ├── projects.py
+ │     ├── payments.py
+ │     ├── employees.py
+ │     └── clients.py
+ └── db/
+       ├── models.py
+       └── session.py
+```
+
+---
+
+# **7. MCP TOOL DEFINITIONS**
+
+## **Tool 1: NLP → Structured Payload**
+
+Purpose:
+Natural language ko convert karna into structured instructions.
+
+Example Input:
+
+```
+“Google ka iss week ka 1.2 lakh payment aa gaya”
+```
+
+Output JSON:
+
+```
+{
+  "action": "record_payment",
+  "project": "Google",
+  "amount": 120000,
+  "week": 47,
+  "status": "received"
+}
+```
+
+---
+
+## **Tool 2: run_query**
+
+Ye tool NLP se bani JSON ko DB action me convert karega.
+
+Example Input:
+
+```
+{
+   "action": "record_payment",
+   "project_id": 55,
+   "amount": 120000,
+   "week": 47
+}
+```
+
+Tool executes:
+
+```
+INSERT INTO payments (...)
+```
+
+---
+
+# **8. Coordinator Agent Logic**
+
+**coordinator_agent.py** (high-level idea)
+
+```
+def handle_request(payload):
+    # 1. Detect intent using NLP Tool
+    structured = call_tool("nlp_parser", payload)
+
+    # 2. Convert structured input → SQL action
+    result = call_tool("run_query", structured)
+
+    return result
+```
+
+---
+
+# **9. FastAPI Endpoints**
+
+### **POST /sales/project/create**
+
+Create new project.
+
+### **POST /sales/payment/add**
+
+Add new payment.
+
+### **GET /manager/dashboard/{manager_id}**
+
+Show all projects + financial data.
+
+### **GET /sales/{user_id}/overview**
+
+Show sales executive view.
+
+### **POST /mcp/message**
+
+Any chat message → pass → MCP NLP tool → DB Update.
+
+---
+
+# **10. NLP Automation Commands Examples**
+
+These are the sentences NLP tool must handle:
+
+### Payments
+
+* “Amazon ka last week ka payment pending hai”
+* “Google se ₹90,000 aa gaye”
+* “Infosys ka week 45 ka payment received”
+
+### Employees
+
+* “Ramesh is assigned to Google project”
+* “Deepak Google project se remove karo”
+
+### Project Status
+
+* “Google project active karo”
+* “Adobe project completed mark karo”
+
+### Sales Manager View
+
+* “Dharmendra ke sare active project dikhado”
+* “Iss month ka total revenue bolo”
+
+---
+
+# **11. Dashboards Needed**
+
+### Manager Dashboard
+
+* All sales executives
+* Each executive → list of 100+ projects
+* Total revenue
+* Pending payments
+* Employee work duration
+* Workload per salesperson
+
+### Executive Dashboard
+
+* Only unke projects
+* Payments status
+* Followups
+* Daily/Weekly reminders
+
+---
+
+# **12. Deliverables Expected from Developer**
+
+1. Full MVP MCP Server
+2. ORM models + DB migrations
+3. NLP Tool
+4. SQL Executor Tool
+5. Coordinator Agent
+6. FastAPI endpoints
+7. Role-based authentication
+8. Dashboards (JSON API first)
+9. Documentation + README
+10. Testing + logging
+
+---
+
+# **13. FINAL PROMPT TO SEND TO DEVELOPER**
+
+**Copy-Paste Below Text**
+
+---
+
+### **📌 Developer Prompt**
+
+We need to build a **Python-based MCP Server (FASTMCP)** for “Golden Eagle IT Technology” that automates the entire Sales → Project → Employee → Payment workflow.
+
+Tech stack:
+**FastAPI + PostgreSQL + SQLAlchemy ORM + MCP Protocol**
+
+You must implement:
+
+### **MCP Architecture**
+
+* Coordinator Agent (`handle_request`)
+* NLP Parser Tool
+* SQL Executor Tool
+* Full DB schema (users, clients, projects, employees, payments, mapping table)
+* FastAPI endpoints for CRUD operations
+* Role-based access (manager, executive)
+
+### **Main Features**
+
+* Sales team projects tracking
+* Manager dashboard
+* Automatic payment updates using NLP
+* Employee assignment tracking
+* Weekly revenue calculation
+* Pending payment alerts
+* NLP understanding of messages like:
+
+  * “Google ka iss week ka payment aa gaya ₹1,20,000”
+  * “Dharmendra ke projects dikhado”
+
+### **What to deliver**
+
+* MCP-ready server
+* All tools
+* Docs
+* Postman collection
+* Sample NLP training templates
+* Logging + error handling
+* Clean folder structure
+
+---
+
+If you need more detail — data flow diagrams, Figma UI, or testing scripts — I can generate that too.
